@@ -21,10 +21,10 @@ public:
 
     //files
     std::string getFile(const std::string &bucketId, const std::string &fileId);
-    std::string getFileView(const std::string &bucketId, const std::string &fileId);
+    //std::string getFileView(const std::string &bucketId, const std::string &fileId);
     std::string updateFile(const std::string &bucketId, const std::string &fileId, const std::string &name = "", const std::vector<std::string> &permissions = {});
     std::string deleteFile(const std::string &bucketId, const std::string &fileId);
-    std::string getFileDownload(const std::string &bucketId, const std::string &fileId);
+    //std::string getFileDownload(const std::string &bucketId, const std::string &fileId);
     std::string createFile(const std::string &bucketId, const std::string &fileName, const std::string &fileContent, const std::vector<std::string> &permissions);
     
 private:

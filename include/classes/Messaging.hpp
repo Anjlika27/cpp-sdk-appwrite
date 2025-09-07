@@ -6,6 +6,7 @@
 #include "enums/HttpStatus.hpp"
 #include "exceptions/AppwriteException.hpp"
 #include <string>
+#include <vector>
 
 class Messaging {
   public:
@@ -31,6 +32,15 @@ class Messaging {
                                   const std::string &name,
                                   const std::string &targetId,
                                   const std::string &subscriberId);
+    std::string updateSms(
+    const std::string &messageId,
+    const std::vector<std::string> &topics = {},
+    const std::vector<std::string> &users = {},
+    const std::vector<std::string> &targets = {},
+    const std::string &content = "",
+    bool draft = false,
+    const std::string &scheduledAt = ""
+);
 
   private:
     std::string projectId;

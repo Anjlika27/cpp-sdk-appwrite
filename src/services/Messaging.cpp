@@ -7,6 +7,8 @@
 #include "exceptions/AppwriteException.hpp"
 #include <iostream>
 #include <sstream>
+#include <nlohmann/json.hpp>
+using json = nlohmann::json;
 
 Messaging::Messaging(const std::string &projectId, const std::string &apiKey)
     : projectId(projectId), apiKey(apiKey) {}
@@ -338,5 +340,46 @@ std::string Messaging::createSubscribers(const std::string &topicId,
         throw AppwriteException("Error Creating Subscriber. Status code: " +
                                 std::to_string(statusCode) +
                                 "\n\nResponse: " + response);
+    }
+}
+
+std::string Messaging::updateSms(
+    const std::string &messageId,
+    const std::vector<std::string> &topics,
+    const std::vector<std::string> &users,
+    const std::vector<std::string> &targets,
+    const std::string &content,
+    bool draft,
+    const std::string &scheduledAt
+) {
+    if (messageId.empty()) {
+        throw AppwriteException("Missing required parameter: 'messageId'");
+    }
+
+    std::string url = Config::API_BASE_URL + "/messaging/messages/sms/" + messageId;
+
+    std::vector<std::string> headers = Config::getHeaders(projectId);
+    headers.push_back("Content-Type: application/json");
+    headers.push_back("X-Appwrite-Key: " + apiKey);
+
+    // Build JSON body
+    nlohmann::json body;
+    if (!topics.empty())     body["topics"] = topics;
+    if (!users.empty())      body["users"] = users;
+    if (!targets.empty())    body["targets"] = targets;
+    if (!content.empty())    body["content"] = content;
+    body["draft"] = draft;
+    if (!scheduledAt.empty()) body["scheduledAt"] = scheduledAt;
+
+    std::string response;
+    int statusCode = Utils::patchRequest(url, body.dump(), headers, response);
+
+    if (statusCode == HttpStatus::OK) {
+        return response;
+    } else {
+        throw AppwriteException(
+            "Error updating SMS. Status code: " + std::to_string(statusCode) +
+            "\n\nResponse: " + response
+        );
     }
 }

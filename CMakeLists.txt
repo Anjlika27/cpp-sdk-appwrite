@@ -1,12 +1,11 @@
-cmake_minimum_required(VERSION 3.10)
+cmake_minimum_required(VERSION 3.15)
 project(AppwriteSDK CXX)
 
-set(CMAKE_CXX_STANDARD 11)
+set(CMAKE_CXX_STANDARD 17)
 
-include_directories(${CMAKE_BINARY_DIR}/conan/include)
-link_directories(${CMAKE_BINARY_DIR}/conan/lib)
-
+# Dependencies
 find_package(CURL REQUIRED)
+find_package(Boost REQUIRED COMPONENTS asio beast)
 
 set(SRCS
     src/Appwrite.cpp
@@ -24,7 +23,11 @@ add_library(AppwriteSDK STATIC ${SRCS})
 
 include_directories(include)
 
-target_link_libraries(AppwriteSDK CURL::libcurl)
+target_link_libraries(AppwriteSDK
+    CURL::libcurl
+    Boost::asio
+    Boost::beast
+)
 
 set_target_properties(AppwriteSDK PROPERTIES
     ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib
@@ -48,3 +51,15 @@ set(HEADERS
 install(DIRECTORY include/ DESTINATION /usr/local/include/AppwriteSDK)
 install(FILES ${HEADERS} DESTINATION /usr/local/include/AppwriteSDK)
 install(TARGETS AppwriteSDK ARCHIVE DESTINATION /usr/local/lib)
+
+# Example executable
+add_executable(updateMessages examples/messaging/messages/updateMessages.cpp)
+target_link_libraries(updateMessages PRIVATE AppwriteSDK CURL::libcurl Boost::asio Boost::beast)
+
+# Custom target to build+run
+add_custom_target(runUpdateMessages
+    COMMAND updateMessages
+    DEPENDS updateMessages
+    WORKING_DIRECTORY ${CMAKE_BINARY_DIR}
+    COMMENT "Build + Run updateMessages"
+)

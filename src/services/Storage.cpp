@@ -213,7 +213,7 @@ std::string Storage::getFile(const std::string &bucketId,
     }
 }
 
-std::string Storage::getFileView(const std::string &bucketId,
+/*std::string Storage::getFileView(const std::string &bucketId,
                                  const std::string &fileId) {
     Validator::validateStorageParams(bucketId);
 
@@ -234,9 +234,9 @@ std::string Storage::getFileView(const std::string &bucketId,
             "Error fetching file. Status code: " + std::to_string(statusCode) +
             "\n\nResponse: " + response);
     }
-}
+}*/
 
-std::string Storage::getFileDownload(const std::string &bucketId,
+/*std::string Storage::getFileDownload(const std::string &bucketId,
                                      const std::string &fileId) {
     Validator::validateStorageParams(bucketId);
 
@@ -257,7 +257,7 @@ std::string Storage::getFileDownload(const std::string &bucketId,
             "Error fetching file. Status code: " + std::to_string(statusCode) +
             "\n\nResponse: " + response);
     }
-}
+}*/
 
 std::string Storage::deleteFile(const std::string &bucketId,
                                 const std::string &fileId) {
